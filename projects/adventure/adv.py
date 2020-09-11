@@ -12,6 +12,9 @@ class Queue():
     def __init__(self):
         self.queue = []
     def enqueue(self, value):
+        for i in self.queue:
+            if i == value:
+                return
         self.queue.append(value)
     def dequeue(self):
         if self.size() > 0:
@@ -20,6 +23,19 @@ class Queue():
             return None
     def size(self):
         return len(self.queue)
+
+class Stack():
+    def __init__(self):
+        self.stack = []
+    def push(self, value):
+        self.stack.append(value)
+    def pop(self):
+        if self.size() > 0:
+            return self.stack.pop()
+        else:
+            return None
+    def size(self):
+        return len(self.stack)
 
 
 
@@ -228,9 +244,9 @@ def get_neighbors(current_node):
     for key, value in roomdict.items():
         neighbors.append(value)
     # if len(neighbors) == 0:
-    #     return False
-    else:
-        return neighbors
+    #     print("False")
+    
+    return neighbors
 
 
 
@@ -241,35 +257,73 @@ def bfs(starting_vertex):
     while q.size() > 0:
         d = q.dequeue()
         l = d[-1]
+        # print(f"this is L {l}")
         if l not in visited_rooms:
             return d
 
         neighbors = set(get_neighbors(l))
-        # neighbors.difference_update(visited_rooms)
-
+        
+        # print(f"q --> ")
         for n in neighbors:
-            new_path = d.copy()
+            if n not in d:
+                new_path = d.copy()
+                new_path.append(n)
+                q.enqueue(new_path)
+        # print(f"new q --> {q.queue}")
+        # for i in q.queue:
+        #     print(i[-1])
+
+
+
+
+
+def dfs(starting_vertex):
+    """
+    Return a list containing a path from
+    starting_vertex to destination_vertex in
+    depth-first order.
+    """
+    s = Stack()
+
+    s.push([starting_vertex])
+
+    while s.size() > 0:
+        p = s.pop()
+        l = p[-1]
+
+        if l not in visited_rooms:
+            return p
+        neighbors = set(get_neighbors(l))
+        
+        # print(f"q --> ")
+        for n in neighbors:
+            new_path = p.copy()
             new_path.append(n)
-            q.enqueue(new_path)
+            s.push(new_path)
 
 
 current_node = 000
 
 while len(visited_rooms) < len(room_graph):
+    # set1 = set(room_graph.keys())
+    # set1.difference_update(visited_rooms)
+    # print(f"current node -->>>> {current_node} length of visited_rooms --->>> {len(visited_rooms)}")
+    # print(f"set defference ------>>>>> {set1}")
     path = bfs(current_node)
-
+    # path = dfs(current_node)
+    
     for i in path[1:]:
         traversal_path.append(i)
         visited_rooms.add(i)
-
+    # print(f"t-path --->>> {traversal_path}")
     current_node = path[-1]
 print()
 print()
-print("**********************")
-print("**********************")
-print(f"traverse path ->>>> {traversal_path}")
-print(f"visited rooms ->>>> {visited_rooms}")
-print("**********************")
+# print("**********************")
+# print("**********************")
+# print(f"traverse path ->>>> {traversal_path}")
+# print(f"visited rooms ->>>> {visited_rooms}")
+# print("**********************")
 print(f"TOTAL STEPS IS     {len(traversal_path)}")
 print()
 print()
