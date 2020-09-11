@@ -274,6 +274,7 @@ print(f"TOTAL STEPS IS     {len(traversal_path)}")
 print()
 print()
 
+
 for move in traversal_path:
     player.travel(move)
     visited_rooms.add(player.current_room)
